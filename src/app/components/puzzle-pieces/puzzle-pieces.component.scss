@@ -1,0 +1,74 @@
+.puzzle-pieces {
+  display: flex;
+  gap: 0; // Remove gap to make pieces fit together
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.puzzle-piece {
+  position: relative;
+  padding: 15px 35px; // Increased padding for puzzle tabs
+  background: #fff;
+  border: 2px solid #333;
+  cursor: grab;
+  user-select: none;
+  margin-left: 50px; // Pull pieces closer together
+
+  // Puzzle piece shape
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+  }
+
+  // Right tab (male connector)
+  &:after {
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: inherit;
+    border: 2px solid #333;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  // Left indent (female connector)
+  &:before {
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #f5f5f5;
+    border: 2px solid #333;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  &:first-child:before {
+    display: none; // Remove left indent from first piece
+  }
+  
+  &.turnLeft {
+    background-color: #ffcdd2;
+    z-index: 3;
+  }
+  
+  &.turnRight {
+    background-color: #c8e6c9;
+    z-index: 2;
+  }
+  
+  &.moveForward {
+    background-color: #bbdefb;
+    z-index: 1;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}

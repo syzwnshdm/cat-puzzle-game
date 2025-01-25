@@ -1,0 +1,15 @@
+<div class="game-board">
+  <div class="grid">
+    <div *ngFor="let cell of getGrid(); let i = index" 
+         class="cell"
+         [class.platform]="true"
+         [class.worm]="isWorm(i % gridSize, Math.floor(i / gridSize))"
+         [class.cat]="isCat(i % gridSize, Math.floor(i / gridSize))"
+         [class.cat-north]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'north'"
+         [class.cat-south]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'south'"
+         [class.cat-east]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'east'"
+         [class.cat-west]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'west'"
+         [class.apple]="isApple(i % gridSize, Math.floor(i / gridSize))">
+    </div>
+  </div>
+</div>

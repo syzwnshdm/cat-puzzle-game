@@ -1,0 +1,108 @@
+.instruction-panel {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  min-height: 100px;
+}
+
+.instructions-container {
+  display: flex;
+  gap: 0; // Remove gap to make pieces fit together
+  flex-grow: 1;
+  min-height: 60px;
+  background: #fff;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.instruction {
+  position: relative;
+  padding: 15px 35px;
+  border: 2px solid #333;
+  cursor: pointer;
+  margin-left: -10px; // Pull pieces closer together
+  
+  // Puzzle piece shape
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+  }
+
+  // Right tab (male connector)
+  &:after {
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: inherit;
+    border: 2px solid #333;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  // Left indent (female connector)
+  &:before {
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #f5f5f5;
+    border: 2px solid #333;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  &:first-child:before {
+    display: none; // Remove left indent from first piece
+  }
+  
+  &.turnLeft {
+    background-color: #ffcdd2;
+    z-index: 3;
+  }
+  
+  &.turnRight {
+    background-color: #c8e6c9;
+    z-index: 2;
+  }
+  
+  &.moveForward {
+    background-color: #bbdefb;
+    z-index: 1;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    
+    &.execute-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+    
+    &.clear-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

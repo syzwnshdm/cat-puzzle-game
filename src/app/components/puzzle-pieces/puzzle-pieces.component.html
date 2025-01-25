@@ -1,0 +1,10 @@
+<div class="puzzle-pieces">
+  <div *ngFor="let instruction of instructions" 
+       class="puzzle-piece"
+       [class]="instruction"
+       draggable="true"
+       (dragstart)="onDragStart($event, instruction)"
+       (dblclick)="onDoubleClick(instruction)">
+    {{ instruction }}
+  </div>
+</div>

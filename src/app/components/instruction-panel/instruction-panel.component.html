@@ -1,0 +1,16 @@
+<div class="instruction-panel" 
+     (dragover)="onDragOver($event)"
+     (drop)="onDrop($event)">
+  <div class="instructions-container">
+    <div *ngFor="let instruction of instructions; let i = index" 
+         class="instruction"
+         [class]="instruction"
+         (dblclick)="removeInstruction(i)">
+      {{ instruction }}
+    </div>
+  </div>
+  <div class="controls">
+    <button class="execute-btn" (click)="executeInstructions()">Execute</button>
+    <button class="clear-btn" (click)="clearInstructions()">Clear</button>
+  </div>
+</div>
