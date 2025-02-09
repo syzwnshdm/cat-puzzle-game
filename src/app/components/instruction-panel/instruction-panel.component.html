@@ -1,10 +1,15 @@
 <div class="instruction-panel" 
      (dragover)="onDragOver($event)"
      (drop)="onDrop($event)">
-  <div class="instructions-container">
+  <div class="instructions-container"
+       (dragover)="onContainerDragOver($event)"
+       (dragleave)="onContainerDragLeave($event)">
     <div *ngFor="let instruction of instructions; let i = index" 
          class="instruction"
          [class]="instruction"
+         draggable="true"
+         (dragstart)="onInstructionDragStart($event, i)"
+         (dragend)="onInstructionDragEnd($event, i)"
          (dblclick)="removeInstruction(i)">
       <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
       <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>

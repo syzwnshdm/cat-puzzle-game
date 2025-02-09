@@ -15,6 +15,7 @@ import { InstructionService } from '../../services/instruction.service';
 export class InstructionPanelComponent implements OnInit, OnDestroy {
   instructions: Instruction[] = [];
   private subscription: Subscription;
+  private isOverContainer: boolean = false;
 
   constructor(
     private gameService: GameService,
@@ -25,12 +26,12 @@ export class InstructionPanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-  
+
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
@@ -41,6 +42,28 @@ export class InstructionPanelComponent implements OnInit, OnDestroy {
     if (instruction) {
       this.instructions.push(instruction);
     }
+  }
+
+  onContainerDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isOverContainer = true;
+  }
+
+  onContainerDragLeave(event: DragEvent) {
+    this.isOverContainer = false;
+  }
+
+  onInstructionDragStart(event: DragEvent, index: number) {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('instruction', this.instructions[index]);
+    }
+  }
+
+  onInstructionDragEnd(event: DragEvent, index: number) {
+    if (!this.isOverContainer) {
+      this.removeInstruction(index);
+    }
+    this.isOverContainer = false;
   }
 
   executeInstructions() {
