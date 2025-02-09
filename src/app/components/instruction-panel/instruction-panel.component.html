@@ -6,7 +6,9 @@
          class="instruction"
          [class]="instruction"
          (dblclick)="removeInstruction(i)">
-      {{ instruction }}
+      <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
+      <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
+      <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
     </div>
   </div>
   <div class="controls">
