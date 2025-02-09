@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../services/game.service';
 import { Subscription } from 'rxjs';
+import confetti from 'canvas-confetti';
 
 interface Position {
   x: number;
@@ -37,6 +38,10 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       this.wormPositions = state.wormPositions;
       this.isGameOver = state.isGameOver;
       this.hasWon = state.hasWon;
+
+      if (state.hasWon) {
+        this.triggerConfetti();
+      }
     });
   }
 
@@ -58,5 +63,13 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   isApple(x: number, y: number): boolean {
     return this.applePosition.x === x && this.applePosition.y === y;
+  }
+
+  private triggerConfetti() {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
   }
 }
