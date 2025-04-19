@@ -14,6 +14,7 @@ import { InstructionService } from '../../services/instruction.service';
 })
 export class InstructionPanelComponent implements OnInit, OnDestroy {
   instructions: Instruction[] = [];
+  currentInstructionIndex: number = -1;
   private subscription: Subscription;
   private isOverContainer: boolean = false;
 
@@ -31,6 +32,11 @@ export class InstructionPanelComponent implements OnInit, OnDestroy {
       this.instructionService.instructionsCleared$.subscribe(
         () => this.instructions = []
       )
+    );
+    this.subscription.add(
+      this.gameService.gameState$.subscribe(state => {
+        this.currentInstructionIndex = state.currentInstructionIndex;
+      })
     );
   }
 

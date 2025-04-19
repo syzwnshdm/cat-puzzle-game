@@ -16,6 +16,7 @@ interface GameState {
   isGameOver: boolean;
   hasWon: boolean;
   applesCollected: number;
+  currentInstructionIndex: number;
 }
 
 @Injectable({
@@ -93,7 +94,8 @@ export class GameService {
       wallPositions,
       isGameOver: false,
       hasWon: false,
-      applesCollected: 0
+      applesCollected: 0,
+      currentInstructionIndex: 0
     };
   }
 
@@ -157,7 +159,8 @@ export class GameService {
       catDirection: 'east',
       applesCollected: 0,
       isGameOver: false,
-      hasWon: false
+      hasWon: false,
+      currentInstructionIndex: 0
     };
   }
 
@@ -167,8 +170,11 @@ export class GameService {
     
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    for (const instruction of instructions) {
+    for (let i = 0; i < instructions.length; i++) {
       if (currentState.isGameOver) break;
+
+      currentState.currentInstructionIndex = i;
+      const instruction = instructions[i];
 
       switch (instruction) {
         case 'turnLeft':
@@ -190,6 +196,10 @@ export class GameService {
       this.gameState.next({...currentState});
       await new Promise(resolve => setTimeout(resolve, 500));
     }
+
+    // Reset instruction index when done
+    currentState.currentInstructionIndex = -1;
+    this.gameState.next({...currentState});
   }
 
   private getTurnDirection(currentDirection: string, turn: 'left' | 'right'): 'north' | 'south' | 'east' | 'west' {

@@ -7,6 +7,7 @@
     <div *ngFor="let instruction of instructions; let i = index" 
          class="instruction"
          [class]="instruction"
+         [class.active]="i === currentInstructionIndex"
          draggable="true"
          (dragstart)="onInstructionDragStart($event, i)"
          (dragend)="onInstructionDragEnd($event, i)"

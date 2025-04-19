@@ -95,6 +95,17 @@
       inset 0 -3px 0 rgba(0,0,0,0.2);
     opacity: 0.8;
   }
+
+  &.active {
+    transform: perspective(1000px) translateZ(10px) scale(1.05);
+    box-shadow: 
+      0 6px 12px rgba(0,0,0,0.2),
+      0 2px 4px rgba(0,0,0,0.15),
+      inset 0 -3px 0 rgba(0,0,0,0.2),
+      0 0 15px rgba(255,255,255,0.5);
+    filter: brightness(1.2);
+    z-index: 10;
+  }
 }
 
 .controls {
