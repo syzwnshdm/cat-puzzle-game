@@ -21,8 +21,16 @@ export class InstructionPanelComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private instructionService: InstructionService
   ) {
-    this.subscription = this.instructionService.instructionAdded$.subscribe(
-      instruction => this.instructions.push(instruction)
+    this.subscription = new Subscription();
+    this.subscription.add(
+      this.instructionService.instructionAdded$.subscribe(
+        instruction => this.instructions.push(instruction)
+      )
+    );
+    this.subscription.add(
+      this.instructionService.instructionsCleared$.subscribe(
+        () => this.instructions = []
+      )
     );
   }
 

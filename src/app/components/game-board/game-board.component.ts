@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../services/game.service';
+import { InstructionService } from '../../services/instruction.service';
 import { Subscription } from 'rxjs';
 import confetti from 'canvas-confetti';
 
@@ -28,7 +29,10 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   isGameOver = false;
   hasWon = false;
 
-  constructor(private gameService: GameService) {}
+  constructor(
+    private gameService: GameService,
+    private instructionService: InstructionService
+  ) {}
 
   ngOnInit() {
     this.subscription = this.gameService.gameState$.subscribe(state => {
@@ -49,6 +53,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
   
+  restartGame() {
+    this.gameService.resetGame();
+    // Clear instructions when game restarts
+    this.instructionService.clearInstructions();
+  }
+
   getGrid(): number[] {
     return Array(this.gridSize * this.gridSize).fill(0);
   }

@@ -12,7 +12,14 @@ export class InstructionService {
   private instructionAddedSource = new Subject<Instruction>();
   instructionAdded$ = this.instructionAddedSource.asObservable();
 
+  private instructionsCleared = new Subject<void>();
+  instructionsCleared$ = this.instructionsCleared.asObservable();
+
   addInstruction(instruction: Instruction) {
     this.instructionAddedSource.next(instruction);
   } 
+
+  clearInstructions() {
+    this.instructionsCleared.next();
+  }
 }

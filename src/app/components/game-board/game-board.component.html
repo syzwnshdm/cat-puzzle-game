@@ -98,3 +98,12 @@
     </div>
   </div>
 </div>
+
+<!-- Game Over Popup -->
+<div class="game-over-popup" *ngIf="isGameOver && !hasWon">
+  <div class="popup-content">
+    <h2>Game Over!</h2>
+    <p>The cat hit an obstacle.</p>
+    <button class="restart-btn" (click)="restartGame()">Try Again</button>
+  </div>
+</div>
