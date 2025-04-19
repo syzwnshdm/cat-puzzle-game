@@ -9,6 +9,8 @@
          class="instruction"
          [class]="instruction"
          [class.active]="i === currentInstructionIndex"
+         [class.insert-indicator]="getInsertionClass(i)"
+         [attr.data-index]="i"
          draggable="true"
          (dragstart)="onInstructionDragStart($event, i)"
          (dragend)="onInstructionDragEnd($event, i)"

@@ -1,15 +1,28 @@
 .game-container {
-  max-width: 100%;
-  padding: 20px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.controls {
+.main-content {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: row;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.puzzle-pieces-container {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.game-board-container {
+  flex-grow: 1;
+}
+
+.instruction-panel-container {
   width: 100%;
 }
