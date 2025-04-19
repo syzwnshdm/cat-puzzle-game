@@ -3,7 +3,8 @@
      (drop)="onDrop($event)">
   <div class="instructions-container"
        (dragover)="onContainerDragOver($event)"
-       (dragleave)="onContainerDragLeave($event)">
+       (dragleave)="onContainerDragLeave($event)"
+       style="display: flex; flex-wrap: wrap; gap: 5px; align-items: flex-start; align-content: flex-start;">
     <div *ngFor="let instruction of instructions; let i = index" 
          class="instruction"
          [class]="instruction"
@@ -11,7 +12,8 @@
          draggable="true"
          (dragstart)="onInstructionDragStart($event, i)"
          (dragend)="onInstructionDragEnd($event, i)"
-         (dblclick)="removeInstruction(i)">
+         (dblclick)="removeInstruction(i)"
+         style="margin-left: 0;">
       <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
       <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
       <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
