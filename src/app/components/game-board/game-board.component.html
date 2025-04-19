@@ -5,11 +5,96 @@
          [class.platform]="true"
          [class.worm]="isWorm(i % gridSize, Math.floor(i / gridSize))"
          [class.cat]="isCat(i % gridSize, Math.floor(i / gridSize))"
-         [class.cat-north]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'north'"
-         [class.cat-south]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'south'"
-         [class.cat-east]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'east'"
-         [class.cat-west]="isCat(i % gridSize, Math.floor(i / gridSize)) && catDirection === 'west'"
          [class.apple]="isApple(i % gridSize, Math.floor(i / gridSize))">
+         
+      <svg *ngIf="isCat(i % gridSize, Math.floor(i / gridSize))" 
+           class="cat-svg"
+           [class.cat-north]="catDirection === 'north'"
+           [class.cat-south]="catDirection === 'south'"
+           [class.cat-east]="catDirection === 'east'"
+           [class.cat-west]="catDirection === 'west'"
+           viewBox="0 0 100 100">
+        
+        <!-- Definitions for shadows and gradients -->
+        <defs>
+          <radialGradient id="bodyGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" style="stop-color:#FFA500"/>
+            <stop offset="100%" style="stop-color:#FF8C00"/>
+          </radialGradient>
+          <filter id="shadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+            <feOffset dx="0" dy="2"/>
+            <feComponentTransfer>
+              <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        <!-- Cat body with shadow -->
+        <ellipse cx="50" cy="55" rx="25" ry="20" 
+                 fill="url(#bodyGradient)" 
+                 stroke="#000" 
+                 stroke-width="2"
+                 filter="url(#shadow)"/>
+        
+        <!-- Cat head with shadow -->
+        <circle cx="50" cy="40" r="15" 
+                fill="url(#bodyGradient)" 
+                stroke="#000" 
+                stroke-width="2"
+                filter="url(#shadow)"/>
+        
+        <!-- Ears with inner detail -->
+        <path d="M40 30 L35 20 L45 25 Z" 
+              fill="url(#bodyGradient)" 
+              stroke="#000" 
+              stroke-width="2"/>
+        <path d="M60 30 L65 20 L55 25 Z" 
+              fill="url(#bodyGradient)" 
+              stroke="#000" 
+              stroke-width="2"/>
+        
+        <!-- Inner ears with soft pink -->
+        <path d="M41 28 L38 22 L44 25 Z" fill="#FFB6C1" opacity="0.8"/>
+        <path d="M59 28 L62 22 L56 25 Z" fill="#FFB6C1" opacity="0.8"/>
+        
+        <!-- Eyes with shine -->
+        <circle cx="45" cy="40" r="3" fill="#000"/>
+        <circle cx="55" cy="40" r="3" fill="#000"/>
+        <circle cx="44" cy="39" r="1" fill="#fff"/>
+        <circle cx="54" cy="39" r="1" fill="#fff"/>
+        
+        <!-- Cute nose -->
+        <path d="M50 44 L48 46 L52 46 Z" fill="#FF69B4"/>
+        
+        <!-- Whiskers with subtle curve -->
+        <path d="M35 45 Q 40 44 45 44" stroke="#000" stroke-width="0.5" fill="none"/>
+        <path d="M35 46 Q 40 46 45 46" stroke="#000" stroke-width="0.5" fill="none"/>
+        <path d="M35 47 Q 40 48 45 48" stroke="#000" stroke-width="0.5" fill="none"/>
+        
+        <path d="M65 45 Q 60 44 55 44" stroke="#000" stroke-width="0.5" fill="none"/>
+        <path d="M65 46 Q 60 46 55 46" stroke="#000" stroke-width="0.5" fill="none"/>
+        <path d="M65 47 Q 60 48 55 48" stroke="#000" stroke-width="0.5" fill="none"/>
+        
+        <!-- Small tail -->
+        <path d="M75 55 Q 80 50 82 55" 
+              stroke="#000" 
+              stroke-width="2" 
+              fill="url(#bodyGradient)"/>
+              
+        <!-- Direction indicator (paw print) -->
+        <g transform="translate(85,50) scale(0.15)">
+          <circle cx="0" cy="0" r="10" fill="#000" opacity="0.6"/>
+          <circle cx="-10" cy="-10" r="8" fill="#000" opacity="0.6"/>
+          <circle cx="10" cy="-10" r="8" fill="#000" opacity="0.6"/>
+          <circle cx="-12" cy="10" r="8" fill="#000" opacity="0.6"/>
+          <circle cx="12" cy="10" r="8" fill="#000" opacity="0.6"/>
+        </g>
+      </svg>
     </div>
   </div>
 </div>

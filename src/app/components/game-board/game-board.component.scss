@@ -7,61 +7,82 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
+  grid-template-columns: repeat(8, 60px);
+  grid-template-rows: repeat(8, 60px);
   gap: 2px;
   background-color: #eee;
   padding: 10px;
   border-radius: 8px;
+  box-shadow: 
+    0 10px 20px rgba(0,0,0,0.1),
+    0 6px 6px rgba(0,0,0,0.1);
 }
 
 .cell {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
 
   &.platform {
-    background-color: #e0e0e0;
+    background: linear-gradient(45deg, #e0e0e0 25%, #d4d4d4 25%, #d4d4d4 50%, #e0e0e0 50%, #e0e0e0 75%, #d4d4d4 75%);
+    background-size: 10px 10px;
   }
 
   &.worm {
-    background-color: #8b4513;
-    border-radius: 50%;
-  }
-
-  &.apple {
-    background-color: #ff0000;
-    border-radius: 50%;
-  }
-
-  &.cat {
-    background-color: #ffa500;
-    position: relative;
-
     &::after {
-      font-size: 24px;
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      width: 30px;
+      height: 10px;
+      background-color: #8b4513;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
+  }
 
-    &.cat-north::after {
-      content: '▲';
+  &.apple {
+    &::after {
+      content: '🍎';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 30px;
     }
+  }
 
-    &.cat-south::after {
-      content: '▼';
-    }
+  &.cat {
+    .cat-svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      transition: transform 0.5s ease;
+      transform-origin: center;
 
-    &.cat-east::after {
-      content: '►';
-    }
+      &.cat-north {
+        transform: translate(-50%, -50%) rotate(-90deg);
+      }
 
-    &.cat-west::after {
-      content: '◄';
+      &.cat-east {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      &.cat-south {
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
+
+      &.cat-west {
+        transform: translate(-50%, -50%) rotate(180deg);
+      }
     }
   }
 }
