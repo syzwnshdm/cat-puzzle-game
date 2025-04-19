@@ -3,7 +3,8 @@
     <div *ngFor="let cell of getGrid(); let i = index" 
          class="cell"
          [class.platform]="true"
-         [class.worm]="isWorm(i % gridSize, Math.floor(i / gridSize))"
+         [class.trap]="isTrap(i % gridSize, Math.floor(i / gridSize))"
+         [class.wall]="isWall(i % gridSize, Math.floor(i / gridSize))"
          [class.cat]="isCat(i % gridSize, Math.floor(i / gridSize))"
          [class.apple]="isApple(i % gridSize, Math.floor(i / gridSize))">
          
@@ -97,13 +98,20 @@
       </svg>
     </div>
   </div>
+  
+  <div class="status-panel">
+    <div class="apple-counter">
+      Apples: {{applesCollected}} collected
+    </div>
+  </div>
 </div>
 
 <!-- Game Over Popup -->
-<div class="game-over-popup" *ngIf="isGameOver && !hasWon">
+<div class="game-over-popup" *ngIf="isGameOver">
   <div class="popup-content">
-    <h2>Game Over!</h2>
-    <p>The cat hit an obstacle.</p>
+    <h2>{{hasWon ? 'Victory!' : 'Game Over!'}}</h2>
+    <p *ngIf="hasWon">You collected all the apples!</p>
+    <p *ngIf="!hasWon">The cat hit a trap.</p>
     <button class="restart-btn" (click)="restartGame()">Try Again</button>
   </div>
 </div>

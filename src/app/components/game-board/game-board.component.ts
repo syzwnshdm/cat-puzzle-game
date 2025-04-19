@@ -23,11 +23,13 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   gridSize = 8;
   catPosition = { x: 0, y: 0 };
-  applePosition = { x: 7, y: 7 };
-  wormPositions: Position[] = [];
+  applePositions: Position[] = [];
+  trapPositions: Position[] = [];
+  wallPositions: Position[] = [];
   catDirection: 'north' | 'south' | 'east' | 'west' = 'east';
   isGameOver = false;
   hasWon = false;
+  applesCollected = 0;
 
   constructor(
     private gameService: GameService,
@@ -38,10 +40,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     this.subscription = this.gameService.gameState$.subscribe(state => {
       this.catPosition = state.catPosition;
       this.catDirection = state.catDirection;
-      this.applePosition = state.applePosition;
-      this.wormPositions = state.wormPositions;
+      this.applePositions = state.applePositions;
+      this.trapPositions = state.trapPositions;
+      this.wallPositions = state.wallPositions;
       this.isGameOver = state.isGameOver;
       this.hasWon = state.hasWon;
+      this.applesCollected = state.applesCollected;
 
       if (state.hasWon) {
         this.triggerConfetti();
@@ -55,7 +59,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   
   restartGame() {
     this.gameService.resetGame();
-    // Clear instructions when game restarts
     this.instructionService.clearInstructions();
   }
 
@@ -63,8 +66,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     return Array(this.gridSize * this.gridSize).fill(0);
   }
 
-  isWorm(x: number, y: number): boolean {
-    return this.wormPositions.some(pos => pos.x === x && pos.y === y);
+  isTrap(x: number, y: number): boolean {
+    return this.trapPositions.some(pos => pos.x === x && pos.y === y);
+  }
+
+  isWall(x: number, y: number): boolean {
+    return this.wallPositions.some(pos => pos.x === x && pos.y === y);
   }
 
   isCat(x: number, y: number): boolean {
@@ -72,7 +79,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   isApple(x: number, y: number): boolean {
-    return this.applePosition.x === x && this.applePosition.y === y;
+    return this.applePositions.some(pos => pos.x === x && pos.y === y);
   }
 
   private triggerConfetti() {

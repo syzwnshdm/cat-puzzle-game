@@ -1,8 +1,9 @@
 .game-board {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   padding: 20px;
+  gap: 20px;
 }
 
 .grid {
@@ -32,18 +33,42 @@
     background-size: 10px 10px;
   }
 
-  &.worm {
+  &.trap {
     &::after {
-      content: '';
+      content: '⚡';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 30px;
-      height: 10px;
-      background-color: #8b4513;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      font-size: 30px;
+      color: #ff4444;
+      text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+      animation: pulse 2s infinite;
+    }
+  }
+
+  &.wall {
+    background: #8b4513;
+    border: none;
+    box-shadow: 
+      inset -2px -2px 5px rgba(0,0,0,0.5),
+      inset 2px 2px 5px rgba(255,255,255,0.2);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          45deg,
+          rgba(0,0,0,0.1) 0px,
+          rgba(0,0,0,0.1) 3px,
+          transparent 3px,
+          transparent 6px
+        );
     }
   }
 
@@ -55,6 +80,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 30px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
   }
 
@@ -87,6 +113,24 @@
   }
 }
 
+.status-panel {
+  background: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  .apple-counter {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a4a4a;
+    
+    &::before {
+      content: '🍎';
+      margin-right: 8px;
+    }
+  }
+}
+
 .game-over-popup {
   position: fixed;
   top: 0;
@@ -109,8 +153,15 @@
   animation: popup 0.3s ease-out;
 
   h2 {
-    color: #f44336;
     margin-bottom: 1rem;
+    
+    .victory & {
+      color: #4caf50;
+    }
+    
+    .game-over & {
+      color: #f44336;
+    }
   }
 
   p {
@@ -141,6 +192,21 @@
   }
   to {
     transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
     opacity: 1;
   }
 }

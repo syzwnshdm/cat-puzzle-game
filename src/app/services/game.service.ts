@@ -10,10 +10,12 @@ interface Position {
 interface GameState {
   catPosition: Position;
   catDirection: 'north' | 'south' | 'east' | 'west';
-  applePosition: Position;
-  wormPositions: Position[];
+  applePositions: Position[];
+  trapPositions: Position[];
+  wallPositions: Position[];
   isGameOver: boolean;
   hasWon: boolean;
+  applesCollected: number;
 }
 
 @Injectable({
@@ -21,27 +23,149 @@ interface GameState {
 })
 export class GameService {
   private gridSize = 8;
+  private minApples = 2;
+  private maxApples = 4;
+  private minTraps = 3;
+  private maxTraps = 5;
+  private minWalls = 4;
+  private maxWalls = 8;
   
-  private initialState: GameState = {
-    catPosition: { x: 0, y: 0 },
-    catDirection: 'east', // Start facing east
-    applePosition: { x: 7, y: 7 },
-    wormPositions: [
-      { x: 3, y: 3 },
-      { x: 4, y: 4 },
-      { x: 5, y: 3 }
-    ],
-    isGameOver: false,
-    hasWon: false
-  };
-
-  private gameState = new BehaviorSubject<GameState>({...this.initialState});
+  private gameState = new BehaviorSubject<GameState>(this.generateNewMap());
   gameState$ = this.gameState.asObservable();
 
+  private generateNewMap(): GameState {
+    let state: GameState;
+    do {
+      state = this.attemptMapGeneration();
+    } while (!this.validateMap(state));
+    
+    return state;
+  }
+
+  private attemptMapGeneration(): GameState {
+    const catPosition = { x: 0, y: 0 };
+    const appleCount = Math.floor(Math.random() * (this.maxApples - this.minApples + 1)) + this.minApples;
+    const trapCount = Math.floor(Math.random() * (this.maxTraps - this.minTraps + 1)) + this.minTraps;
+    const wallCount = Math.floor(Math.random() * (this.maxWalls - this.minWalls + 1)) + this.minWalls;
+
+    const applePositions: Position[] = [];
+    const trapPositions: Position[] = [];
+    const wallPositions: Position[] = [];
+
+    // Generate apples
+    for (let i = 0; i < appleCount; i++) {
+      let position;
+      do {
+        position = this.getRandomPosition();
+      } while (
+        this.positionOverlaps(position, [catPosition], applePositions, trapPositions, wallPositions)
+      );
+      applePositions.push(position);
+    }
+
+    // Generate traps
+    for (let i = 0; i < trapCount; i++) {
+      let position;
+      do {
+        position = this.getRandomPosition();
+      } while (
+        this.positionOverlaps(position, [catPosition], applePositions, trapPositions, wallPositions)
+      );
+      trapPositions.push(position);
+    }
+
+    // Generate walls
+    for (let i = 0; i < wallCount; i++) {
+      let position;
+      do {
+        position = this.getRandomPosition();
+      } while (
+        this.positionOverlaps(position, [catPosition], applePositions, trapPositions, wallPositions)
+      );
+      wallPositions.push(position);
+    }
+
+    return {
+      catPosition,
+      catDirection: 'east',
+      applePositions,
+      trapPositions,
+      wallPositions,
+      isGameOver: false,
+      hasWon: false,
+      applesCollected: 0
+    };
+  }
+
+  private validateMap(state: GameState): boolean {
+    // Check if at least one apple is reachable
+    return state.applePositions.some(apple => 
+      this.isPathPossible(state.catPosition, apple, state.wallPositions));
+  }
+
+  private isPathPossible(start: Position, end: Position, walls: Position[]): boolean {
+    const queue: Position[] = [start];
+    const visited = new Set<string>();
+    visited.add(`${start.x},${start.y}`);
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      
+      if (current.x === end.x && current.y === end.y) {
+        return true;
+      }
+
+      const moves = [
+        { x: current.x + 1, y: current.y },
+        { x: current.x - 1, y: current.y },
+        { x: current.x, y: current.y + 1 },
+        { x: current.x, y: current.y - 1 }
+      ];
+
+      for (const move of moves) {
+        if (
+          this.isValidPosition(move) && 
+          !walls.some(w => w.x === move.x && w.y === move.y) &&
+          !visited.has(`${move.x},${move.y}`)
+        ) {
+          queue.push(move);
+          visited.add(`${move.x},${move.y}`);
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private getRandomPosition(): Position {
+    return {
+      x: Math.floor(Math.random() * this.gridSize),
+      y: Math.floor(Math.random() * this.gridSize)
+    };
+  }
+
+  private positionOverlaps(pos: Position, ...positionArrays: Position[][]): boolean {
+    return positionArrays.some(positions =>
+      positions.some(p => p.x === pos.x && p.y === pos.y)
+    );
+  }
+
+  private resetCatPosition(state: GameState): GameState {
+    return {
+      ...state,
+      catPosition: { x: 0, y: 0 },
+      catDirection: 'east',
+      applesCollected: 0,
+      isGameOver: false,
+      hasWon: false
+    };
+  }
+
   async executeInstructions(instructions: Instruction[]) {
-    this.resetGame();
+    let currentState = this.resetCatPosition(this.gameState.value);
+    this.gameState.next(currentState);
+    
     await new Promise(resolve => setTimeout(resolve, 500));
-    let currentState = {...this.gameState.value};
     
     for (const instruction of instructions) {
       if (currentState.isGameOver) break;
@@ -55,19 +179,15 @@ export class GameService {
           break;
         case 'moveForward':
           const newPosition = this.calculateNewPosition(currentState);
-          if (this.isValidPosition(newPosition)) {
+          if (this.isValidPosition(newPosition) && 
+              !currentState.wallPositions.some(w => w.x === newPosition.x && w.y === newPosition.y)) {
             currentState.catPosition = newPosition;
             this.checkGameStatus(currentState);
-          } else {
-            currentState.isGameOver = true;
           }
           break;
       }
 
-      // Update state after each instruction
       this.gameState.next({...currentState});
-      
-      // Add a small delay between instructions
       await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
@@ -104,21 +224,30 @@ export class GameService {
   }
 
   private checkGameStatus(state: GameState) {
-    // Check if cat reached apple
-    if (state.catPosition.x === state.applePosition.x && 
-        state.catPosition.y === state.applePosition.y) {
-      state.hasWon = true;
+    // Check if cat hit a trap
+    if (state.trapPositions.some(trap => 
+        trap.x === state.catPosition.x && trap.y === state.catPosition.y)) {
       state.isGameOver = true;
+      return;
     }
 
-    // Check if cat hit a worm
-    if (state.wormPositions.some(worm => 
-        worm.x === state.catPosition.x && worm.y === state.catPosition.y)) {
-      state.isGameOver = true;
+    // Check if cat collected an apple
+    const appleIndex = state.applePositions.findIndex(apple => 
+      apple.x === state.catPosition.x && apple.y === state.catPosition.y);
+    
+    if (appleIndex !== -1) {
+      state.applePositions.splice(appleIndex, 1);
+      state.applesCollected++;
+      
+      // Win condition: all apples collected
+      if (state.applePositions.length === 0) {
+        state.hasWon = true;
+        state.isGameOver = true;
+      }
     }
   }
 
   resetGame() {
-    this.gameState.next({...this.initialState});
+    this.gameState.next(this.generateNewMap());
   }
 }
