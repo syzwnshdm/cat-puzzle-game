@@ -1,24 +1,27 @@
-<div class="instruction-panel" 
-     (dragover)="onDragOver($event)"
-     (drop)="onDrop($event)">
-  <div class="instructions-container"
-       (dragover)="onContainerDragOver($event)"
-       (dragleave)="onContainerDragLeave($event)"
-       style="display: flex; flex-wrap: wrap; gap: 5px; align-items: flex-start; align-content: flex-start;">
+<div class="instruction-panel">
+  <div class="instructions-container" 
+       cdkDropList
+       id="instructionList"
+       [cdkDropListData]="instructions"
+       (cdkDropListDropped)="drop($event)"
+       (dragenter)="onDragEnter($event)"
+       (dragleave)="onDragLeave($event)">
     <div *ngFor="let instruction of instructions; let i = index" 
          class="instruction"
          [class]="instruction"
-         [class.active]="i === currentInstructionIndex"
-         [class.insert-indicator]="getInsertionClass(i)"
-         [attr.data-index]="i"
-         draggable="true"
-         (dragstart)="onInstructionDragStart($event, i)"
-         (dragend)="onInstructionDragEnd($event, i)"
-         (dblclick)="removeInstruction(i)"
-         style="margin-left: 0;">
-      <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
-      <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
-      <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
+         [class.no-transitions]="isDraggingNew"
+         cdkDrag
+         [cdkDragDisabled]="isDraggingNew"
+         [cdkDragData]="instruction"
+         (dblclick)="removeInstruction(i)">
+      <div class="instruction-content">
+        <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
+        <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
+        <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
+      </div>
+      <!-- Only show placeholder during internal reordering -->
+      <div *cdkDragPlaceholder class="instruction-placeholder"
+           [style.display]="isDraggingNew ? 'none' : 'flex'"></div>
     </div>
   </div>
   <div class="controls">

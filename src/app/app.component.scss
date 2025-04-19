@@ -3,8 +3,11 @@
   flex-direction: column;
   gap: 20px;
   padding: 20px;
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 .main-content {
@@ -12,17 +15,32 @@
   flex-direction: row;
   gap: 30px;
   align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  isolation: isolate;
 }
 
 .puzzle-pieces-container {
   width: 300px;
   flex-shrink: 0;
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
 }
 
 .game-board-container {
-  flex-grow: 1;
+  flex-grow: 0;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .instruction-panel-container {
   width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 3;
 }

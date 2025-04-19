@@ -1,12 +1,26 @@
-<div class="puzzle-pieces">
+<div class="puzzle-pieces" 
+     cdkDropList 
+     [cdkDropListData]="instructions" 
+     [cdkDropListConnectedTo]="['instructionList']"
+     [cdkDropListSortingDisabled]="true">
   <div *ngFor="let instruction of instructions" 
        class="puzzle-piece"
        [class]="instruction"
-       draggable="true"
-       (dragstart)="onDragStart($event, instruction)"
+       cdkDrag
+       [cdkDragData]="instruction"
+       [cdkDragDisabled]="false"
+       (cdkDragStarted)="onDragStart($event)"
+       (cdkDragEnded)="onDragEnd($event)"
        (dblclick)="onDoubleClick(instruction)">
-    <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
-    <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
-    <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
+    <div class="puzzle-piece-content">
+      <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
+      <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
+      <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
+    </div>
+    <div *cdkDragPreview [class]="'puzzle-piece-preview ' + instruction">
+      <ng-container *ngIf="instruction === 'turnLeft'">↰</ng-container>
+      <ng-container *ngIf="instruction === 'turnRight'">↱</ng-container>
+      <ng-container *ngIf="instruction === 'moveForward'">🚶</ng-container>
+    </div>
   </div>
 </div>

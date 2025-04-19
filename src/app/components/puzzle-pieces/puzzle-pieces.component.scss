@@ -14,22 +14,15 @@
   height: 60px;
   border: 2px solid #333;
   background: #fff;
-  cursor: grab;
+  cursor: move;
   user-select: none;
-  transition: transform 0.2s, box-shadow 0.2s;
-  transform-style: preserve-3d;
-  transform: perspective(1000px) translateZ(0);
+  transition: transform 0.2s;
   border-radius: 8px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  
-  box-shadow: 
-    0 4px 6px rgba(0,0,0,0.1),
-    0 1px 3px rgba(0,0,0,0.08),
-    inset 0 -2px 0 rgba(0,0,0,0.2);
   
   &.turnLeft {
     background-color: #ffcdd2;
@@ -47,19 +40,35 @@
   }
 
   &:hover {
-    transform: perspective(1000px) translateZ(10px);
-    box-shadow: 
-      0 6px 12px rgba(0,0,0,0.15),
-      0 2px 4px rgba(0,0,0,0.12),
-      inset 0 -3px 0 rgba(0,0,0,0.2);
+    transform: scale(1.05);
   }
 
-  &:active {
-    cursor: grabbing;
-    transform: perspective(1000px) translateZ(5px);
-    box-shadow: 
-      0 2px 4px rgba(0,0,0,0.1),
-      0 1px 2px rgba(0,0,0,0.06),
-      inset 0 -1px 0 rgba(0,0,0,0.2);
+  // Prevent the original from disappearing during drag
+  &.cdk-drag-dragging {
+    visibility: visible !important;
+    opacity: 1 !important;
   }
+}
+
+// Style for the drag preview
+.puzzle-piece-preview {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: white;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+
+  &.turnLeft { background-color: #ffcdd2; }
+  &.turnRight { background-color: #c8e6c9; }
+  &.moveForward { background-color: #bbdefb; }
+}
+
+// Hide placeholder in source list
+.cdk-drag-placeholder {
+  display: none;
 }
